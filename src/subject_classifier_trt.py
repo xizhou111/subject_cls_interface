@@ -8,18 +8,19 @@ TRT_LOGGER = trt.Logger(trt.ILogger.ERROR)
 
 class ClassifierPipeLine():
     def __init__(self):
-        self.engine_model_path = "model/roberta_pretrain_512.trt"
-        self.onnx_model_path = "model/roberta_pretrain_512_static.onnx"
+        self.engine_model_path = "src/model/roberta_pretrain_512.trt"
+        self.onnx_model_path = "src/model/roberta_pretrain_512_static.onnx"
         self.batch_size = 1
         self.max_sequence_length = 256
         # self.engine = self.get_engine(self.engine_model_path)
         self.engine_model_path = self.convert_onnx_to_engine(self.onnx_model_path, self.engine_model_path, max_batch_size=self.batch_size)
+        # self.engine = self.convert_onnx_to_engine(self.onnx_model_path, max_batch_size=self.batch_size)
         self.engine = self.get_engine(self.engine_model_path)
         self.context = self.get_context(self.engine)
 
         self.inputs, self.outputs, self.bindings, self.stream = common.allocate_buffers_v2(self.engine, self.context)
 
-        self.transformers_model_path = "trt_model/chinese-roberta-wwm-ext-tokenizer"
+        self.transformers_model_path = "src/model/chinese-roberta-wwm-ext"
         self.tokenizer = AutoTokenizer.from_pretrained(self.transformers_model_path, use_fast=True)
         
         self.id2label = {0: "other", 1: "chinese", 2: "math", 3: "english", 4: "physics", 5: "chemistry", 6: "bio", 7: "history", 8: "geography", 9: "politics"}
@@ -71,9 +72,11 @@ class ClassifierPipeLine():
                 return None
 
             if engine_filename:
+                print("Saving engine to file {}".format(engine_filename))
                 with open(engine_filename, 'wb') as f:
                     f.write(engine.serialize())
             print("Created engine success! ")
+            # return engine
 
             return engine_filename
 

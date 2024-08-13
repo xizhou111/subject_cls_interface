@@ -4,7 +4,7 @@ import torch
 
 class ClassifierPipeLine():
     def __init__(self):
-        self.model_path = './chinese-roberta-wwm-ext'
+        self.model_path = 'src/model/chinese-roberta-wwm-ext'
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
         self.subj_cls_pipeline = pipeline(task='text-classification', 

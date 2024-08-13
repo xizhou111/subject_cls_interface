@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import tornado
 from tornado.web import url, RequestHandler
-from src.subject_classifier import ClassifierPipeLine
+from src.subject_classifier_trt import ClassifierPipeLine
 import json
 from logger.logger import GetLogger
 
@@ -42,8 +42,8 @@ if __name__ == "__main__":
     classifer_pipeline = ClassifierPipeLine()
 
     application_1 = tornado.web.Application(handlers=[(r"/predict", SubjectClassifier, {"subject_classifier": classifer_pipeline}),])
-    application_1.listen(1023)
-    print('begin listening on port:{}'.format(1023))
+    application_1.listen(1234)
+    print('begin listening on port:{}'.format(1234))
 
     tornado.ioloop.IOLoop.current().start()
 
